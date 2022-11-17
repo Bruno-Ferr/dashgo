@@ -3,7 +3,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from "../components/Form/Input";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { ToastContainer } from 'react-toastify';
 
 type SignFormData = {
   email: string;
@@ -16,6 +18,7 @@ const signInFormSchema = yup.object().shape({
 })
 
 export default function SignIn() {
+  const { signIn } = useContext(AuthContext)
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
@@ -23,6 +26,7 @@ export default function SignIn() {
   const { errors } = formState
 
   const handleSignIn: SubmitHandler<SignFormData> = async (values) => {
+    await signIn(values)
     await new Promise(resolve => setTimeout(resolve, 2000));
   }
 
@@ -33,6 +37,18 @@ export default function SignIn() {
       h="100vh"
       w="100vw"
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Flex
         as="form"
         w="100%"

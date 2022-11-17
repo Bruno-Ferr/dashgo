@@ -1,4 +1,6 @@
-import { Flex, Text, Box, Avatar } from "@chakra-ui/react"
+import { Flex, Text, Box, Avatar, SkeletonCircle } from "@chakra-ui/react"
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 
 interface ProfileProps {
@@ -6,18 +8,18 @@ interface ProfileProps {
 }
 
 export function Profile({ showProfileData = true }: ProfileProps) {
-
+  const { user } = useContext(AuthContext)
 
   return (
     <Flex align="center">
       { showProfileData && (
         <Box mr="4" textAlign="right">
-          <Text>Bruno Ferreira</Text>
-          <Text fontSize="small" >fbruno233@gmail.com</Text>
+          <Text>{user?.name}</Text>
+          <Text fontSize="small" >{user?.email}</Text>
         </Box>
       )}
 
-      <Avatar size="md" name="Bruno Ferreira" src="https://github.com/Bruno-ferr.png" />
+      <Avatar size="md" name={user?.name} src={user?.image} />
     </Flex>
   );
 }

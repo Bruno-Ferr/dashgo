@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, Text, theme } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, theme, Tr } from "@chakra-ui/react";
 import dynamic from 'next/dynamic';
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
@@ -66,14 +66,14 @@ export default function dashboard() {
       <Header />
       <Flex w="100%" my="6" maxW={1480} mx="auto" px="6">
         <Sidebar />
-        <SimpleGrid flex="1" gap="4" minChildWidth="320px" align="flex-start">
+        <SimpleGrid flex="1" gap="4" columns={2} align="flex-start">
           <Box
             p={["6", "8"]}
             bg="gray.800"
             borderRadius={8}
             pb="4"
           >
-            <Text fontSize="lg" mb="4">Subscriptions of the week</Text>
+            <Text fontSize="lg" mb="4">Sales of the week</Text>
             <Chart options={options} series={series} type="area" height={160} />
           </Box>
           <Box
@@ -82,10 +82,55 @@ export default function dashboard() {
             borderRadius={8}
             pb="4"
           >
-            <Text fontSize="lg" mb="4">Opening rate</Text>
+            <Text fontSize="lg" mb="4">Monthly profit</Text>
             <Chart options={options} series={series} type="area" height={160} />
           </Box>
+          <Box
+            p="8"
+            bg="gray.800"
+            borderRadius={8}
+            pb="4"
+            height='30rem'
+          >
+            <TableContainer>
+              <Table variant='simple'>
+                <TableCaption>Sold items list</TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Items</Th>
+                    <Th >Vendidos</Th>
+                    <Th isNumeric>R$</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>Brinco</Td>
+                    <Td>5</Td>
+                    <Td isNumeric>25.4</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Pulseira</Td>
+                    <Td>132</Td>
+                    <Td isNumeric>30.48</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Colar</Td>
+                    <Td>255</Td>
+                    <Td isNumeric>0.91444</Td>
+                  </Tr>
+                </Tbody>
+                <Tfoot>
+                  <Tr>
+                    <Th>*</Th>
+                    <Th>Total</Th>
+                    <Th isNumeric>19570</Th>
+                  </Tr>
+                </Tfoot>
+              </Table>
+            </TableContainer>
+          </Box>
         </SimpleGrid>
+        
       </Flex>
     </Flex>
     

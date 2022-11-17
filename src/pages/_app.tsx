@@ -7,22 +7,29 @@ import { SidebarDrawerProvider } from '../contexts/SidebarDrawerContext';
 import { makeServer } from '../services/mirage';
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from '../services/queryClient';
+import { AuthContextProvider } from '../contexts/AuthContext';
 
-if (process.env.NODE_ENV === 'development') {
-  makeServer();
-}
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// if (process.env.NODE_ENV === 'development') {
+//   makeServer();
+// }
 
 function MyApp({ Component, pageProps }: AppProps) {
   return ( 
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <SidebarDrawerProvider>
-          <Component {...pageProps} />
-        </SidebarDrawerProvider>
-      </ChakraProvider>
+    <AuthContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <SidebarDrawerProvider>
+            <Component {...pageProps} />
+            <ToastContainer />
+          </SidebarDrawerProvider>
+        </ChakraProvider>
 
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </AuthContextProvider>
   )
 }
 
