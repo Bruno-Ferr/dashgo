@@ -1,7 +1,8 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Spinner, Link } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Spinner, Link, TableContainer } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useState } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import { CgTrash } from "react-icons/cg";
 import { Header } from "../../components/Header";
 import { DashgoLoading } from "../../components/loading";
 import { Pagination } from "../../components/Pagination";
@@ -10,6 +11,7 @@ import { api } from "../../services/api";
 
 import { useUsers } from "../../services/hooks/useUsers";
 import { queryClient } from "../../services/queryClient";
+import { useMutation } from "react-query";
 
 export default function UserList() {
   const [page, setPage] = useState(1)
@@ -21,14 +23,23 @@ export default function UserList() {
   })
 
   async function handlePrefetchUser(userId: string) {
-    await queryClient.prefetchQuery(['http://localhost:3000/api/user', userId], async () => {
-      const res = await api.get(`http://localhost:3000/api/user/${userId}`)
-      
+    await queryClient.prefetchQuery(['http://localhost:3333/users/all', userId], async () => {
+      const res = await api.get(`http://localhost:3333/users/all`)
+ 
       return res.data;
     }, {
       staleTime: 1000 * 60 * 10   // 10 min
     })
   }
+
+  const { mutate: deleteUser } = useMutation(async (email) => {
+    await api.delete(`http://localhost:3333/user/${email}`)
+    queryClient.invalidateQueries("getUsers")
+  })
+
+  // async function handleDeleteUser(email: string) {
+  //   return await api.delete(`http://localhost:3333/user/${email}`)
+  // }
 
   return (
     <Box>
@@ -87,33 +98,48 @@ export default function UserList() {
                 <Tbody>
                   {data.users.map(user => {
                     return (
-                      <Tr key={user.id}>
+                      <Tr key={user?.email}>
                         <Td px={["4", "4", "6"]}>
                           <Checkbox colorScheme="pink" />
                         </Td>
                         <Td>
                           <Box>
-                            <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(user.id)}>
-                              <Text fontWeight="bold">{user.name}</Text>
+                            <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(user?.email)}>
+                              <Text fontWeight="bold">{user?.name}</Text>
                             </Link>
-                            <Text fontSize="sm" color="gray.300">{user.email}</Text>
+                            <Text fontSize="sm" color="gray.300">{user?.email}</Text>
                           </Box>
                         </Td>
-                        <Td>{user.createdAt}</Td>
+                        <Td>criado em</Td>
                         <Td>
-                          <Button
-                            as="a"
-                            size="sm"
-                            fontSize="sm"
-                            bgGradient="linear(to-br, #7F00FF 0%, #E100FF 130%)"
-                            colorScheme="purple"
-                            leftIcon={<Icon
-                              as={RiPencilLine}
-                              fontSize="16"
-                            />}
-                          >
-                            Edit
-                          </Button>
+                          <TableContainer>
+                            <Button
+                              as="a"
+                              size="sm"
+                              fontSize="sm"
+                              bgGradient="#linear(to-br, #7F00FF 0%, #E100FF 130%)"
+                              colorScheme="purple"
+                              cursor='pointer'
+                              leftIcon={<Icon
+                                as={RiPencilLine}
+                                fontSize="16"
+                              />}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              ml={4}
+                              as="a"
+                              size="sm"
+                              fontSize="sm"
+                              bgGradient="#ff0040"
+                              colorScheme="red"
+                              cursor='pointer'
+                              onClick={() => deleteUser(user.email)}
+                            >
+                              <Icon as={CgTrash} fontSize="16"/>
+                            </Button>
+                          </TableContainer>
                         </Td>
                       </Tr>
                     )
@@ -127,7 +153,6 @@ export default function UserList() {
               />
             </>
           )}
-
         </Box>
       </Flex>
     </Box>

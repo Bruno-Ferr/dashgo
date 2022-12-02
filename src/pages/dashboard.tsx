@@ -90,40 +90,59 @@ export default function dashboard() {
             bg="gray.800"
             borderRadius={8}
             pb="4"
-            height='30rem'
           >
-            <TableContainer>
-              <Table variant='simple'>
-                <TableCaption>Sold items list</TableCaption>
-                <Thead>
-                  <Tr>
-                    <Th>Items</Th>
-                    <Th >Vendidos</Th>
-                    <Th isNumeric>R$</Th>
+            <TableContainer boxSize='lg' overflowY='auto' >
+              <Table variant='unstyled'>
+                <TableCaption placement="top" color="gray.100">SOLD ITEMS LIST</TableCaption>
+                <Thead borderBlockEnd='1px solid' color="gray.300">
+                  <Tr color="gray.500">
+                    <Th>Name</Th>
+                    <Th>Quantidade</Th>
+                    <Th isNumeric>Amount</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   <Tr>
                     <Td>Brinco</Td>
                     <Td>5</Td>
-                    <Td isNumeric>25.4</Td>
+                    <Td isNumeric>R$25.4</Td>
                   </Tr>
                   <Tr>
                     <Td>Pulseira</Td>
                     <Td>132</Td>
-                    <Td isNumeric>30.48</Td>
+                    <Td isNumeric>R$30.48</Td>
                   </Tr>
                   <Tr>
                     <Td>Colar</Td>
                     <Td>255</Td>
-                    <Td isNumeric>0.91444</Td>
+                    <Td isNumeric>R$914</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Anel</Td>
+                    <Td>255</Td>
+                    <Td isNumeric>R$914</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Berloque</Td>
+                    <Td>255</Td>
+                    <Td isNumeric>R$914</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Bolsa</Td>
+                    <Td>255</Td>
+                    <Td isNumeric>R$914</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Aliança</Td>
+                    <Td>255</Td>
+                    <Td isNumeric>R$914</Td>
                   </Tr>
                 </Tbody>
-                <Tfoot>
+                <Tfoot color="gray.500">
                   <Tr>
                     <Th>*</Th>
                     <Th>Total</Th>
-                    <Th isNumeric>19570</Th>
+                    <Th isNumeric>R$19570</Th>
                   </Tr>
                 </Tfoot>
               </Table>
