@@ -1,4 +1,5 @@
 import { Stack } from "@chakra-ui/react";
+import { CgProfile } from "react-icons/cg";
 import { RiContactsLine, RiDashboardLine, RiGitMergeLine, RiInputMethodLine } from "react-icons/ri";
 import { NavLink } from "./NavLink";
 import { NavSection } from "./NavSection";
@@ -11,6 +12,7 @@ export function SidebarNav() {
         <NavSection title="GENERAL">
           <NavLink icon={RiDashboardLine} href='/dashboard'>Dashboard</NavLink>
           <NavLink icon={RiContactsLine} href='/users'>Users</NavLink>
+          <NavLink icon={CgProfile} href='/profile'>Profile</NavLink>
         </NavSection>
               
         <NavSection title="AUTOMATION">

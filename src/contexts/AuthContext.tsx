@@ -4,6 +4,8 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { api } from "../services/api";
 
+import { io, Socket } from "socket.io-client";
+
 type User = {
   name: string;
   email: string;
@@ -21,6 +23,7 @@ type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>;
   user: User;
   isAuthenticated: boolean;
+  socket: Socket;
 }
 
 interface AuthProviderProps {
@@ -40,12 +43,24 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>()
   const isAuthenticated = !!user
 
+  const [socket, setSocket] = useState(null)
+
+  useEffect(() => {
+    setSocket(io("http://localhost:3334"))
+  }, [])
+
+  useEffect(() => {
+    socket?.emit("newUser", (user?.email))
+  }, [socket, user])
+
+  
+
   useEffect(() => {
     const {'dashgo.token': token } = parseCookies()
 
     if(token) {
       api.get("http://localhost:3333/me").then(res => {
-        const { name, email, image, permissions, roles } = res.data; 
+        const { name, email, image, permissions, roles } = res.data.me; 
 
         setUser({ name, email, image, permissions, roles })
       }).catch(() => {
@@ -61,9 +76,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
         password
       })
 
-      const { token, refreshToken, image, name, permissions, roles } = res.data;
-
-      console.log(res.data)
+      const { token, refreshToken, image, name, permissions, roles } = res.data.me;
 
       setCookie(undefined, 'dashgo.token', token, {
         maxAge: 60 * 60 * 24 * 30,
@@ -93,7 +106,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ signIn, isAuthenticated, user }}>
+    <AuthContext.Provider value={{ signIn, isAuthenticated, user, socket,  }}>
       {children}
     </AuthContext.Provider>
   )

@@ -20,8 +20,8 @@ export function ActiveLink({children, shouldMatchExactHref = false, ...rest }: A
 
   if(!shouldMatchExactHref && 
     (asPath.startsWith(String(rest.href)) ||
-    asPath.startsWith(String(rest.as)))) {
-      isActive = true;
+      asPath.startsWith(String(rest.as)))) {
+        isActive = true;
     }
 
   return (

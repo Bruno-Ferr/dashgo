@@ -1,4 +1,5 @@
 import { count } from "console";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { string } from "yup";
 import { api } from "../api";
@@ -9,6 +10,7 @@ type User = {
   name: string;
   email: string;
   createdAt: string;
+  isOnline: boolean;
 }
 
 type GetUsersResponse = {
@@ -16,7 +18,9 @@ type GetUsersResponse = {
   users: User[];
 }
 
+
 export async function getUsers(page: number): Promise<GetUsersResponse> {
+  
   const { data } = await api.get('http://localhost:3333/users/all', {
     params: {
       page,
@@ -26,11 +30,12 @@ export async function getUsers(page: number): Promise<GetUsersResponse> {
   const totalCount = Number(data.TotalCount)
 
   const users = data.usuarios
-  
+
   return {
     users,
     totalCount,
   };
+
 }
 
 export function useUsers(page: number) {

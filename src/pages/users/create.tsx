@@ -15,6 +15,9 @@ import { useRouter } from "next/router";
 type CreateUserFormData = {
   name: string;
   email: string;
+  image: string;
+  permissions: string[];
+  roles: string[];
   password: string;
   password_confirmation: string;
 };
@@ -32,10 +35,9 @@ export default function CreateUser() {
   const router = useRouter()
 
   const createUser = useMutation(async (user: CreateUserFormData) => {
-    const res = await api.post('http://localhost:3000/api/users', {
+    const res = await api.post('http://localhost:3333/users/addUser', {
       user: {
-        ...user,
-        created_at: new Date(),
+        ...user
       }
     })
 
@@ -72,6 +74,10 @@ export default function CreateUser() {
 
           <VStack spacing="8">
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
+              <Input name="image" label="image" error={errors.image} {...register('image')} />
+            </SimpleGrid>
+
+            <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
               <Input name="name" label="Full name" error={errors.name} {...register('name')} />
               <Input name="email" type="email" label="email" error={errors.email} {...register('email')} />
             </SimpleGrid>
@@ -79,6 +85,11 @@ export default function CreateUser() {
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
               <Input name="password" type="password" label="password" error={errors.password} {...register('password')} />
               <Input name="password_confirmation" type="password" label="confirm password" error={errors.password_confirmation} {...register('password_confirmation')} />
+            </SimpleGrid>
+
+            <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
+              <Input name="roles" label="roles" error={errors.roles} {...register('roles')} />
+              <Input name="permissions" label="permissions" error={errors.permissions} {...register('permissions')} />
             </SimpleGrid>
           </VStack>
 

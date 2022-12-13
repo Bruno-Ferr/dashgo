@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Spinner, Link, TableContainer } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import { CgTrash } from "react-icons/cg";
 import { Header } from "../../components/Header";
@@ -12,10 +12,26 @@ import { api } from "../../services/api";
 import { useUsers } from "../../services/hooks/useUsers";
 import { queryClient } from "../../services/queryClient";
 import { useMutation } from "react-query";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import { boolean } from "yup";
+
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  isOnline: boolean;
+}
+
+type onlineUsersProps = {
+  email: string
+}[]
 
 export default function UserList() {
   const [page, setPage] = useState(1)
   const { data, isLoading, isFetching, error } = useUsers(page)
+  const { user, socket } = useContext(AuthContext)
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -32,14 +48,26 @@ export default function UserList() {
     })
   }
 
-  const { mutate: deleteUser } = useMutation(async (email) => {
+  const { mutate: deleteUser } = useMutation(async (email: string) => {
     await api.delete(`http://localhost:3333/user/${email}`)
     queryClient.invalidateQueries("getUsers")
+
+    socket?.emit("sendDeleteNotification", {
+      senderName: user.name,
+      type: "delete",
+      userDeleted: email
+    })
   })
 
-  // async function handleDeleteUser(email: string) {
-  //   return await api.delete(`http://localhost:3333/user/${email}`)
-  // }
+  // useEffect(() => {
+  //   socket?.on('online User', allOnlineUsers => {
+  //     // Pegar usuários online no login e depois atualiza-los com o socket
+  //   })
+
+  //   socket?.on('user disconnecting', disconnecting => {
+  //     setOnlineUsers(onlineUsers.filter(user => user.email !== disconnecting))
+  //   })
+  // }, [socket])
 
   return (
     <Box>
@@ -97,6 +125,7 @@ export default function UserList() {
                 </Thead>
                 <Tbody>
                   {data.users.map(user => {
+
                     return (
                       <Tr key={user?.email}>
                         <Td px={["4", "4", "6"]}>

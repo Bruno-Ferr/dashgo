@@ -1,5 +1,6 @@
 import { Box, Flex, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, theme, Tr } from "@chakra-ui/react";
 import dynamic from 'next/dynamic';
+
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
 
@@ -60,7 +61,6 @@ const series = [
 ];
 
 export default function dashboard() {
-
   return (
     <Flex direction="column" h="100vh">
       <Header />
