@@ -16,22 +16,11 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { boolean } from "yup";
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  isOnline: boolean;
-}
-
-type onlineUsersProps = {
-  email: string
-}[]
-
 export default function UserList() {
   const [page, setPage] = useState(1)
   const { data, isLoading, isFetching, error } = useUsers(page)
   const { user, socket } = useContext(AuthContext)
+  const [onlineUsers, setOnlineUsers] = useState([])
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -59,15 +48,11 @@ export default function UserList() {
     })
   })
 
-  // useEffect(() => {
-  //   socket?.on('online User', allOnlineUsers => {
-  //     // Pegar usuários online no login e depois atualiza-los com o socket
-  //   })
-
-  //   socket?.on('user disconnecting', disconnecting => {
-  //     setOnlineUsers(onlineUsers.filter(user => user.email !== disconnecting))
-  //   })
-  // }, [socket])
+  useEffect(() => {
+    socket?.on('visitors', users => {
+      setOnlineUsers(users)
+    })
+  }, [socket])
 
   return (
     <Box>
@@ -137,6 +122,11 @@ export default function UserList() {
                               <Text fontWeight="bold">{user?.name}</Text>
                             </Link>
                             <Text fontSize="sm" color="gray.300">{user?.email}</Text>
+                            {
+                              (onlineUsers.length != 0 && onlineUsers.find(online => online === user?.email)) || user.isOnline ? 
+                              <Text fontSize="sm" color="green.300">Online</Text> : <></>
+                            }
+                            
                           </Box>
                         </Td>
                         <Td>criado em</Td>

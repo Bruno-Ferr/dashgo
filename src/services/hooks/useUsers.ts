@@ -27,6 +27,7 @@ export async function getUsers(page: number): Promise<GetUsersResponse> {
     }
   })
 
+  console.log('useUsers Hook')
   const totalCount = Number(data.TotalCount)
 
   const users = data.usuarios
