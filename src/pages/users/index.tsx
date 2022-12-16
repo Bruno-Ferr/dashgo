@@ -19,8 +19,8 @@ import { boolean } from "yup";
 export default function UserList() {
   const [page, setPage] = useState(1)
   const { data, isLoading, isFetching, error } = useUsers(page)
-  const { user, socket } = useContext(AuthContext)
-  const [onlineUsers, setOnlineUsers] = useState([])
+  const { user, socket, onlineUsers } = useContext(AuthContext)
+  // const [onlineUsers, setOnlineUsers] = useState([])
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -48,11 +48,17 @@ export default function UserList() {
     })
   })
 
-  useEffect(() => {
-    socket?.on('visitors', users => {
-      setOnlineUsers(users)
-    })
-  }, [socket])
+  // useEffect(() => {
+  //   socket?.on('visitors', users => {
+  //     console.log(users)
+  //     setOnlineUsers(users)
+  //   })
+
+  //   // socket?.on("disconnect", () => {
+  //   //   console.log('disconectando')
+  //   //   setOnlineUsers(onlineUsers.filter(online => online !== user?.email))
+  //   // })
+  // }, [socket])
 
   return (
     <Box>
@@ -123,10 +129,9 @@ export default function UserList() {
                             </Link>
                             <Text fontSize="sm" color="gray.300">{user?.email}</Text>
                             {
-                              (onlineUsers.length != 0 && onlineUsers.find(online => online === user?.email)) || user.isOnline ? 
-                              <Text fontSize="sm" color="green.300">Online</Text> : <></>
+                              (onlineUsers.length != 0 && onlineUsers.find(online => online === user?.email)) &&
+                              <Text fontSize="sm" color="green.300">Online</Text>
                             }
-                            
                           </Box>
                         </Td>
                         <Td>criado em</Td>

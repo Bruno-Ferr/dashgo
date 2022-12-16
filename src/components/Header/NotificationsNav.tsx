@@ -10,7 +10,7 @@ export function NotificationsNav() {
 
   function handleSignOut() {
     signOut()
-    //socket.disconnect()
+    socket?.disconnect()
   }
 
   useEffect(() => {
